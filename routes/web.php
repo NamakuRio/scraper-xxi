@@ -1,3 +1,3 @@
 <?php
 
-Route::get('/scraper', 'ScraperController@index')->name('scraper.index');
+Route::get('/', 'MainController@index')->name('main.index');
