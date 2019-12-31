@@ -83,8 +83,6 @@ class GetFilmFileJob implements ShouldQueue
                     ];
 
                     InsertFilmFileJob::dispatch($file, $this->film)->delay(now()->addSeconds($key));
-
-                    sleep(5);
                 }
             }
         }
