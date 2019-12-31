@@ -34,6 +34,6 @@ class InsertFilmSubtitleJob implements ShouldQueue
      */
     public function handle()
     {
-        $insertFilmSubtitle = $this->film->filmSubtitles()->create($this->data)->delay(now()->addSeconds(rand(60, 300)));
+        $insertFilmSubtitle = $this->film->filmSubtitles()->create($this->data);
     }
 }
