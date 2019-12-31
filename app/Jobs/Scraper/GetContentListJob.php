@@ -45,6 +45,8 @@ class GetContentListJob implements ShouldQueue
             if ($key == 0) continue;
 
             GetFilmPageJob::dispatch($v)->delay(now()->addSeconds($key));
+
+            sleep(5);
         }
     }
 }

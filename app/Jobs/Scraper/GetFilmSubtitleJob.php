@@ -61,6 +61,8 @@ class GetFilmSubtitleJob implements ShouldQueue
             ];
 
             InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
+
+            sleep(5);
         }
     }
 }
