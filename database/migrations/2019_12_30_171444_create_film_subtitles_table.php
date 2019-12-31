@@ -17,7 +17,7 @@ class CreateFilmSubtitlesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('film_id')->unsigned();
             $table->string('label');
-            $table->string('file');
+            $table->text('file');
             $table->timestamps();
 
             $table->foreign('film_id')->references('id')->on('films')->onUpdate('cascade')->onDelete('cascade');

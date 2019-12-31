@@ -17,7 +17,7 @@ class CreateFilmsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('slug');
-            $table->string('picture');
+            $table->text('picture');
             $table->string('subtitle');
             $table->string('tmdb');
             $table->string('cookie_name');

@@ -73,7 +73,6 @@ class GetFilmFileJob implements ShouldQueue
 
                 $result = ScraperController::curl($url, $headers);
 
-
                 foreach (json_decode($result[0], true)[0]['sources'] as $key => $v) {
                     $file = [
                         'quality' => json_decode($result[0], true)[0]['sources'][$key]['label'],
