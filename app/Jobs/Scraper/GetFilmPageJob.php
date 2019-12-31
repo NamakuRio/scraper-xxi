@@ -37,6 +37,6 @@ class GetFilmPageJob implements ShouldQueue
         $picture = explode("'", explode("<img data-original='", $this->data)[1])[0];
         $filmPage = file_get_contents("https://idxx1.net" . $getUrl . "/play");
 
-        GetFilmDataJob::dispatch($filmPage, $slug, $picture);
+        GetFilmDataJob::dispatch($filmPage, $slug, $picture)->delay(now()->addSeconds(rand(60, 300)));
     }
 }

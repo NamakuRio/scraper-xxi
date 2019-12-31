@@ -60,7 +60,7 @@ class GetFilmSubtitleJob implements ShouldQueue
                 'file' => $subtitleAll[$key]['file'],
             ];
 
-            InsertFilmSubtitleJob::dispatch($subtitleData, $this->film);
+            InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
         }
     }
 }

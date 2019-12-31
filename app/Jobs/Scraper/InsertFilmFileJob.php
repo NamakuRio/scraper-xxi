@@ -34,6 +34,6 @@ class InsertFilmFileJob implements ShouldQueue
      */
     public function handle()
     {
-        $insertFilmFile = $this->film->filmFiles()->create($this->data);
+        $insertFilmFile = $this->film->filmFiles()->create($this->data)->delay(now()->addSeconds(60, 300));
     }
 }

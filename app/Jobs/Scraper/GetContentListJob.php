@@ -44,7 +44,7 @@ class GetContentListJob implements ShouldQueue
         foreach (explode($this->delimiter3, $closeExplodeListContent) as $key => $v) {
             if ($key == 0) continue;
 
-            GetFilmPageJob::dispatch($v);
+            GetFilmPageJob::dispatch($v)->delay(now()->addSeconds($key));
         }
     }
 }

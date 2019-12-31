@@ -35,7 +35,7 @@ class InsertFilmJob implements ShouldQueue
     {
         $insertFilm = Film::create($this->data);
 
-        GetFilmSubtitleJob::dispatch($this->data, $insertFilm);
-        GetFilmFileJob::dispatch($this->data, $insertFilm);
+        GetFilmSubtitleJob::dispatch($this->data, $insertFilm)->delay(now()->addSeconds(rand(60, 300)));
+        GetFilmFileJob::dispatch($this->data, $insertFilm)->delay(now()->addSeconds(rand(60, 300)));
     }
 }

@@ -47,11 +47,11 @@ class GetHtmlListOfPageJob implements ShouldQueue
         if ($this->loop) {
             for ($i = $this->from; $i <= $this->to; $i++) {
                 $url = $this->url . $i;
-                GetHtmlListOfPageJob::dispatch($url, $this->delimiter1, $this->delimiter2, $this->delimiter3);
+                GetHtmlListOfPageJob::dispatch($url, $this->delimiter1, $this->delimiter2, $this->delimiter3)->delay(now()->addSeconds($i));
             }
         } else {
             $getHtmlListOfPage = file_get_contents($this->url);
-            GetContentListJob::dispatch($getHtmlListOfPage, $this->delimiter1, $this->delimiter2, $this->delimiter3);
+            GetContentListJob::dispatch($getHtmlListOfPage, $this->delimiter1, $this->delimiter2, $this->delimiter3)->delay(now()->addSeconds(rand(60, 300)));
         }
     }
 }

@@ -75,16 +75,14 @@ class GetFilmFileJob implements ShouldQueue
 
 
                 foreach (json_decode($result[0], true)[0]['sources'] as $key => $v) {
-                    // if (json_decode($result[0], true)[0]['sources'][$key]['label'] == '360p' || json_decode($result, true)[0]['sources'][$key]['label'] == '480p' || json_decode($result, true)[0]['sources'][$key]['label'] == '720p' || json_decode($result, true)[0]['sources'][$key]['label'] == '1080p') {
-                        $file = [
-                            'quality' => json_decode($result[0], true)[0]['sources'][$key]['label'],
-                            'google_drive_id' => explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
-                            'google_drive_link' => 'https://drive.google.com/open?id=' . explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
-                            'link' => json_decode($result[0], true)[0]['sources'][$key]['file']
-                        ];
+                    $file = [
+                        'quality' => json_decode($result[0], true)[0]['sources'][$key]['label'],
+                        'google_drive_id' => explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
+                        'google_drive_link' => 'https://drive.google.com/open?id=' . explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
+                        'link' => json_decode($result[0], true)[0]['sources'][$key]['file']
+                    ];
 
-                        InsertFilmFileJob::dispatch($file, $this->film);
-                    // }
+                    InsertFilmFileJob::dispatch($file, $this->film)->delay(now()->addSeconds($key));
                 }
             }
         }
