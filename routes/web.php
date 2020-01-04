@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\ShortLink;
-use Illuminate\Support\Str;
-
 Route::get('/', 'MainController@index')->name('main');
 
 
@@ -17,3 +14,5 @@ Route::group(['prefix' => 'shortlink'], function() {
     Route::get('/', 'ShortLinkController@index')->name('shortlink.index');
     Route::get('/{short_link}', 'ShortLinkController@to')->name('shortlink.to');
 });
+
+Route::get('scraper', 'ScraperController@index');
