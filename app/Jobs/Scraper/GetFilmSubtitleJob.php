@@ -3,11 +3,14 @@
 namespace App\Jobs\Scraper;
 
 use App\Http\Controllers\ScraperController;
+use App\Models\ShortLink;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
 class GetFilmSubtitleJob implements ShouldQueue
 {
@@ -50,17 +53,35 @@ class GetFilmSubtitleJob implements ShouldQueue
         $to = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
         $resultInJson = base64_decode(strtr($result[0], $from, $to));
 
-        $cekArraySubtitle = count(json_decode($resultInJson)) -1;
+        $cekArraySubtitle = count(json_decode($resultInJson)) - 1;
 
         $subtitleAll = json_decode($resultInJson, true)[$cekArraySubtitle];
 
-        foreach($subtitleAll as $key => $v){
-            $subtitleData = [
-                'label' => $subtitleAll[$key]['label'],
-                'file' => $subtitleAll[$key]['file'],
-            ];
+        foreach ($subtitleAll as $key => $v) {
+            DB::beginTransaction();
+            try {
+                Repeat: $random = Str::random(rand(6, 150));
+                $cek = ShortLink::where('link_to', '=', $random)->count();
 
-            InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
+                if ($cek != 0) goto Repeat;
+
+                $dataInsertShortLink = [
+                    'link_from' => $subtitleAll[$key]['file'],
+                    'link_to' => $random,
+                ];
+
+                $insertShortLink = ShortLink::create($dataInsertShortLink);
+
+                $subtitleData = [
+                    'label' => $random,
+                    'file' => $subtitleAll[$key]['file'],
+                ];
+
+                InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilmsTable extends Migration
+class CreateShortLinksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateFilmsTable extends Migration
      */
     public function up()
     {
-        Schema::create('films', function (Blueprint $table) {
+        Schema::create('short_links', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title');
-            $table->string('slug');
-            $table->text('picture');
-            $table->text('subtitle');
-            $table->string('tmdb');
-            $table->string('cookie_name');
-            $table->string('timestamps');
+            $table->text('link_from');
+            $table->text('link_to');
+            $table->bigInteger('visitor')->default(0);
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ class CreateFilmsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('films');
+        Schema::dropIfExists('short_links');
     }
 }

@@ -4,6 +4,8 @@
 
 <!-- BEGIN: Page Vendor JS-->
 <script src="@asset('app-assets/vendors/js/extensions/sweetalert2.all.min.js')"></script>
+{{-- <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script> --}}
 @yield('js-vendor')
 <!-- END: Page Vendor JS-->
 

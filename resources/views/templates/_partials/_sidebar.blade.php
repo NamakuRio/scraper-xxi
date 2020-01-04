@@ -19,59 +19,67 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="nav-item @active('admin.dashboard')">
-                <a href="@route('admin.dashboard')">
-                    <i class="feather icon-home"></i>
-                    <span class="menu-title" data-i18n="Beranda">Beranda</span>
+            <li class="nav-item @active('film.index')">
+                <a href="@route('film.index')">
+                    <i class="feather icon-film"></i>
+                    <span class="menu-title" data-i18n="Film">Film</span>
                 </a>
             </li>
-            <li class="navigation-header"><span>Lainnya</span></li>
-            <li class="nav-item @active('admin/account','prefix')">
-                <a href="@route('admin.account')">
-                    <i class="feather icon-user"></i>
-                    <span class="menu-title" data-i18n="Akun">Akun</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="javascript:void(0)">
-                    <i class="feather icon-users"></i>
-                    <span class="menu-title" data-i18n="Kelola Pengguna">Kelola Pengguna</span>
-                </a>
-                <ul class="menu-content">
-                    @can('user.view')
-                        <li>
-                            <a href="">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-item" data-i18n="Pengguna">Pengguna</span>
-                            </a>
-                        </li>
-                    @endcan
-                    @can('role.view')
-                        <li>
-                            <a href="">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-item" data-i18n="Peran">Peran</span>
-                            </a>
-                        </li>
-                    @endcan
-                    @can('permission.view')
-                        <li>
-                            <a href="">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-item" data-i18n="Izin">Izin</span>
-                            </a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-            @can('setting_group.view')
-                <li class="nav-item">
-                    <a href="">
-                        <i class="feather icon-settings"></i>
-                        <span class="menu-title" data-i18n="Pengaturan">Pengaturan</span>
+            @auth
+                <li class="nav-item @active('admin.dashboard')">
+                    <a href="@route('admin.dashboard')">
+                        <i class="feather icon-home"></i>
+                        <span class="menu-title" data-i18n="Beranda">Beranda</span>
                     </a>
                 </li>
-            @endcan
+                <li class="navigation-header"><span>Lainnya</span></li>
+                <li class="nav-item @active('admin/account','prefix')">
+                    <a href="@route('admin.account')">
+                        <i class="feather icon-user"></i>
+                        <span class="menu-title" data-i18n="Akun">Akun</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)">
+                        <i class="feather icon-users"></i>
+                        <span class="menu-title" data-i18n="Kelola Pengguna">Kelola Pengguna</span>
+                    </a>
+                    <ul class="menu-content">
+                        @can('user.view')
+                            <li>
+                                <a href="">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-item" data-i18n="Pengguna">Pengguna</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('role.view')
+                            <li>
+                                <a href="">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-item" data-i18n="Peran">Peran</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('permission.view')
+                            <li>
+                                <a href="">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-item" data-i18n="Izin">Izin</span>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+                @can('setting_group.view')
+                    <li class="nav-item">
+                        <a href="">
+                            <i class="feather icon-settings"></i>
+                            <span class="menu-title" data-i18n="Pengaturan">Pengaturan</span>
+                        </a>
+                    </li>
+                @endcan
+            @endauth
         </ul>
     </div>
 </div>

@@ -18,7 +18,7 @@ class CreateFilmFilesTable extends Migration
             $table->bigInteger('film_id')->unsigned();
             $table->string('quality');
             $table->string('google_drive_id');
-            $table->string('google_drive_link');
+            $table->text('google_drive_link');
             $table->text('link');
             $table->timestamps();
 

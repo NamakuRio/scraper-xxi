@@ -15,34 +15,32 @@ class FilmController extends Controller
 
     public function getFilm()
     {
-        $films = Film::all();
+        $films = Film::paginate(10);
+        $films->load('filmFiles', 'filmSubtitles');
+        $view = view('film.data', compact('films'))->render();
 
-        return DataTables::of($films)
-            ->editColumn('picture', function ($film) {
-                return $film->picture();
-            })
-            ->addColumn('film', function ($film) {
-                $file = "";
+        return response()->json(['html' => $view]);
+    }
 
-                $file .= '<a href="javascript:void(0)" class="text-center">'.$film->filmFiles->count().' Video</a>';
-                return $file;
-            })
-            ->addColumn('subtitle', function ($film) {
-                $subtitle = "";
+    public function searchFilm(Request $request)
+    {
+        $title = $request->title;
 
-                $subtitle .= '<a href="javascript:void(0)" class="text-center">'.$film->filmSubtitles->count().' Subtitle</a>';
-                return $subtitle;
-            })
-            ->addColumn('action', function ($film) {
-                $action = "";
+        $films = Film::where('title', 'LIKE', '%'.$title.'%')->paginate(10);
+        $films->load('filmFiles', 'filmSubtitles');
+        $view = view('film.data', compact('films', 'title'))->render();
 
-                $action .= '<button type="button" class="btn btn-icon rounded-circle bg-gradient-success mr-1 mb-1"><i class="feather icon-search"></i></button>';
-                return $action;
-            })
-            ->escapeColumns([])
-            ->addIndexColumn()
-            ->make(true);
+        return response()->json(['html' => $view]);
+    }
 
-        // return $datatables;
+    public function getDetailFilm(Film $film)
+    {
+        if(!$film){
+            return response()->json(['status' => 'error', 'title' => 'Film tidak ditemukan', 'content' => 'Film yang Anda cari tidak ditemukan']);
+        }
+
+        $view = view('film.detail', compact('film'))->render();
+
+        return response()->json(['status' => 'success', 'title' => $film->title, 'content' => $view]);
     }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Jobs\Scraper;
 
+use App\Models\ShortLink;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
 class GetFilmDataJob implements ShouldQueue
 {
@@ -42,16 +45,34 @@ class GetFilmDataJob implements ShouldQueue
         $cookie_name = explode('";', explode('var cookie_name="', $this->data)[1])[0];
         $timestamps = explode(';', explode('ts2=', $this->data)[1])[0];
 
-        $dataInsertFilm = [
-            'title' => $title,
-            'slug' => $this->slug,
-            'picture' => $this->picture,
-            'subtitle' => $subtitle,
-            'tmdb' => $tmdb,
-            'cookie_name' => $cookie_name,
-            'timestamps' => $timestamps
-        ];
+        DB::beginTransaction();
+        try {
+            Repeat: $random = Str::random(rand(6, 150));
+            $cek = ShortLink::where('link_to', '=', $random)->count();
 
-        InsertFilmJob::dispatch($dataInsertFilm)->delay(now()->addSeconds(rand(60, 300)));
+            if ($cek != 0) goto Repeat;
+
+            $dataInsertShortLink = [
+                'link_from' => $subtitle,
+                'link_to' => $random,
+            ];
+
+            $insertShortLink = ShortLink::create($dataInsertShortLink);
+
+            $dataInsertFilm = [
+                'title' => $title,
+                'slug' => $this->slug,
+                'picture' => $this->picture,
+                'subtitle' => $random,
+                'tmdb' => $tmdb,
+                'cookie_name' => $cookie_name,
+                'timestamps' => $timestamps
+            ];
+
+            InsertFilmJob::dispatch($dataInsertFilm)->delay(now()->addSeconds(rand(60, 300)));
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+        }
     }
 }
