@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Film;
 use Illuminate\Http\Request;
+use Jenssegers\Agent\Agent;
 use Yajra\DataTables\Facades\DataTables;
 
 class FilmController extends Controller
 {
     public function index()
     {
-        return view('film.index');
+        // $agent = new Agent();
+        // if($agent->isMobile()){
+        //     return view('film.index-mobile');
+        // } else {
+            return view('film.index');
+        // }
     }
 
     public function getFilm()
