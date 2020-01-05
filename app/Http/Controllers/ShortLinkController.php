@@ -40,7 +40,7 @@ class ShortLinkController extends Controller
 
             $agent = new Agent();
 
-            $ip_address = request()->ip();
+            $ip_address = request()->getClientIp();
             $device = $agent->device();
             $platform = $agent->platform();
             $browser = $agent->browser();
