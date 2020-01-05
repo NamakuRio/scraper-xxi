@@ -59,6 +59,7 @@
         var searchQuery = "";
         var dataSearchQuery = true;
         var dataAll = true;
+        var loadAgain = true;
 
         $(function() {
             loadMoreData(page);
@@ -88,16 +89,20 @@
         });
 
         $(window).scroll(function() {
-            if($(window).scrollTop() + $(window).height() > $(document).height() - 1){
-                if(searchPage){
-                    if(dataSearchQuery){
-                        page++;
-                        loadMoreDataSearch(page, searchQuery);
-                    }
-                } else {
-                    if(dataAll){
-                        page++;
-                        loadMoreData(page);
+            if($(window).scrollTop() + $(window).height() > $(document).height() - 20){
+                if(loadAgain){
+                    loadAgain = false;
+
+                    if(searchPage){
+                        if(dataSearchQuery){
+                            page++;
+                            loadMoreDataSearch(page, searchQuery);
+                        }
+                    } else {
+                        if(dataAll){
+                            page++;
+                            loadMoreData(page);
+                        }
                     }
                 }
             }
@@ -118,6 +123,7 @@
                     $(".loading-more").hide();
                 },
                 success: function(result) {
+                    loadAgain = true;
                     if(result.html == ""){
                         $(".no-more-data").show();
                         $(".no-more-data div h4").html("Data sudah habis");
@@ -194,6 +200,7 @@
                     $(".loading-more").hide();
                 },
                 success: function(result) {
+                    loadAgain = true;
                     if(result.html == ""){
                         $(".no-more-data").show();
                         $(".no-more-data div h4").html("Data sudah habis");
