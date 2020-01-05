@@ -23,7 +23,6 @@ class ShortLinkController extends Controller
 
     public function to(ShortLink $shortLink)
     {
-
         DB::beginTransaction();
         try {
             $visitor = $shortLink->visitor + 1;

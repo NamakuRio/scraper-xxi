@@ -10,10 +10,8 @@
         <fieldset>
             <label class="font-weight-bold" for="detail-subtitle">Subtitle</label>
             <p class="form-control-static" id="detail-subtitle" style="padding-left:0.2rem">
-                {{-- <span tooltip="Klik untuk menyalin!" data-text="{{ $film->subtitle }}" onclick="copyText(this)" style="cursor:pointer;"> --}}
-                    {{ $film->subtitle }}
-                {{-- </span>  --}}
-                <a href="{{ $film->subtitle }}" target="_blank" tooltip="Buka di tab baru"><i class="feather icon-external-link"></i></a></p>
+                <a href="@route('shortlink.to', ['short_link' => $film->subtitle])" target="_blank" tooltip="Buka di tab baru">Download subtitle <i class="feather icon-external-link"></i></a>
+            </p>
         </fieldset>
         <fieldset>
             <label class="font-weight-bold" for="detail-get-data">Data didapatkan</label>
@@ -38,7 +36,7 @@
                         @if ($film->filmSubtitles->count() == 0)
                             <tr>
                                 <td colspan="4" class="text-center">
-                                    <h4>Tidak ada Subtitle</h4>
+                                    <h4>Subtitle tidak tersedia</h4>
                                 </td>
                             </tr>
                         @endif
@@ -47,7 +45,7 @@
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $filmSubtitle->label }}</td>
                                 <td>
-                                    <a href="{{ $filmSubtitle->file }}" target="_blank">Download</a>
+                                    <a href="@route('shortlink.to', ['short_link' => $filmSubtitle->file])" target="_blank">Download</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -65,16 +63,15 @@
                         <tr>
                             <th>#</th>
                             <th>Kualitas</th>
-                            <th>Google Drive ID</th>
+                            {{-- <th>Google Drive ID</th> --}}
                             <th>Google Drive Link</th>
-                            {{-- <th>File</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         @if ($film->filmFiles->count() == 0)
                             <tr>
                                 <td colspan="4" class="text-center">
-                                    <h4>Tidak ada Film</h4>
+                                    <h4>File tidak tersedia</h4>
                                 </td>
                             </tr>
                         @endif
@@ -82,17 +79,12 @@
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ strtoupper($filmFile->quality) }}</td>
-                                <td>
-                                    {{-- <span tooltip="Klik untuk menyalin!" data-text="{{ $filmFile->google_drive_id }}" onclick="copyText(this)" style="cursor:pointer">Salin</span> --}}
-                                    {{ $filmFile->google_drive_id }}
-                                </td>
-                                <td>
-                                    {{-- <span tooltip="Klik untuk menyalin!" data-text="{{ $filmFile->google_drive_link }}" onclick="copyText(this)" style="cursor:pointer">Salin</span> |  --}}
-                                    <a href="{{ $filmFile->google_drive_link }}" target="_blank" tooltip="Buka di tab baru">Buka <i class="feather icon-external-link"></i></a>
-                                </td>
                                 {{-- <td>
-                                    <a href="{{ $filmFile->link }}" target="_blank" tooltip="Buka di tab baru">Buka <i class="feather icon-external-link"></i></a>
+                                    {{ $filmFile->google_drive_id }}
                                 </td> --}}
+                                <td>
+                                    <a href="@route('shortlink.to', ['short_link' => $filmFile->google_drive_link])" target="_blank" tooltip="Buka di tab baru">Buka <i class="feather icon-external-link"></i></a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
