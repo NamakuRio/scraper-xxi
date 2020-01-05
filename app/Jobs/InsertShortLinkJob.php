@@ -41,7 +41,7 @@ class InsertShortLinkJob implements ShouldQueue
             try {
                 echo $record->id . ' ';
 
-                $cekDuls = ShortLink::where('link_to', '=', $record->google_drive_link)->count();
+                $cekDuls = ShortLink::where('link_to', '=', $record->link)->count();
                 if ($cekDuls != 0) {
                     DB::rollback();
                     echo " Udah ada";
@@ -54,7 +54,7 @@ class InsertShortLinkJob implements ShouldQueue
                 if ($cek != 0) goto Repeat;
 
                 $dataInsertShortLink = [
-                    'link_from' => $record->google_drive_link,
+                    'link_from' => $record->link,
                     'link_to' => $random,
                 ];
 
@@ -66,7 +66,7 @@ class InsertShortLinkJob implements ShouldQueue
                 }
 
                 $dataUpdateFilm = [
-                    'google_drive_link' => $random,
+                    'link' => $random,
                 ];
 
                 $updateFilm = $record->update($dataUpdateFilm);
