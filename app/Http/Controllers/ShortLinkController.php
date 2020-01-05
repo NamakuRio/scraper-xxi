@@ -21,7 +21,7 @@ class ShortLinkController extends Controller
         return view('shortlink.index');
     }
 
-    public function to(ShortLink $shortLink)
+    public function to(Request $request, ShortLink $shortLink)
     {
         DB::beginTransaction();
         try {
@@ -40,7 +40,7 @@ class ShortLinkController extends Controller
 
             $agent = new Agent();
 
-            $ip_address = request()->getClientIp();
+            $ip_address = $request->getClientIp();
             $device = $agent->device();
             $platform = $agent->platform();
             $browser = $agent->browser();
