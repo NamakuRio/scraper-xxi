@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Film;
+use App\Models\FilmFile;
 use App\Models\ShortLink;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,14 +34,14 @@ class InsertShortLinkJob implements ShouldQueue
      */
     public function handle()
     {
-        $records = Film::offset(0)->limit(3000)->get();
+        $records = FilmFile::offset(0)->limit(10000)->get();
 
         foreach ($records as $key => $record) {
             DB::beginTransaction();
             try {
                 echo $record->id . ' ';
 
-                $cekDuls = ShortLink::where('link_to', '=', $record->subtitle)->count();
+                $cekDuls = ShortLink::where('link_to', '=', $record->google_drive_link)->count();
                 if ($cekDuls != 0) {
                     DB::rollback();
                     echo " Udah ada";
@@ -53,7 +54,7 @@ class InsertShortLinkJob implements ShouldQueue
                 if ($cek != 0) goto Repeat;
 
                 $dataInsertShortLink = [
-                    'link_from' => $record->subtitle,
+                    'link_from' => $record->google_drive_link,
                     'link_to' => $random,
                 ];
 
@@ -65,7 +66,7 @@ class InsertShortLinkJob implements ShouldQueue
                 }
 
                 $dataUpdateFilm = [
-                    'subtitle' => $random,
+                    'google_drive_link' => $random,
                 ];
 
                 $updateFilm = $record->update($dataUpdateFilm);
