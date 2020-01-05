@@ -74,8 +74,8 @@ class GetFilmSubtitleJob implements ShouldQueue
                 $insertShortLink = ShortLink::create($dataInsertShortLink);
 
                 $subtitleData = [
-                    'label' => $random,
-                    'file' => $subtitleAll[$key]['file'],
+                    'label' => $subtitleAll[$key]['label'],
+                    'file' => $random,
                 ];
 
                 InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
