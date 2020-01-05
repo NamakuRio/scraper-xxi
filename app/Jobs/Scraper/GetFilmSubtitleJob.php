@@ -59,30 +59,24 @@ class GetFilmSubtitleJob implements ShouldQueue
         $subtitleAll = json_decode($resultInJson, true)[$cekArraySubtitle];
 
         foreach ($subtitleAll as $key => $v) {
-            DB::beginTransaction();
-            try {
-                Repeat: $random = Str::random(rand(6, 150));
-                $cek = ShortLink::where('link_to', '=', $random)->count();
+            Repeat: $random = Str::random(rand(6, 150));
+            $cek = ShortLink::where('link_to', '=', $random)->count();
 
-                if ($cek != 0) goto Repeat;
+            if ($cek != 0) goto Repeat;
 
-                $dataInsertShortLink = [
-                    'link_from' => $subtitleAll[$key]['file'],
-                    'link_to' => $random,
-                ];
+            $dataInsertShortLink = [
+                'link_from' => $subtitleAll[$key]['file'],
+                'link_to' => $random,
+            ];
 
-                $insertShortLink = ShortLink::create($dataInsertShortLink);
+            $insertShortLink = ShortLink::create($dataInsertShortLink);
 
-                $subtitleData = [
-                    'label' => $subtitleAll[$key]['label'],
-                    'file' => $random,
-                ];
+            $subtitleData = [
+                'label' => $subtitleAll[$key]['label'],
+                'file' => $random,
+            ];
 
-                InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollback();
-            }
+            InsertFilmSubtitleJob::dispatch($subtitleData, $this->film)->delay(now()->addSeconds($key));
         }
     }
 }

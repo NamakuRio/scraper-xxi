@@ -78,46 +78,38 @@ class GetFilmFileJob implements ShouldQueue
                 $result = ScraperController::curl($url, $headers);
 
                 foreach (json_decode($result[0], true)[0]['sources'] as $key => $v) {
-                    DB::beginTransaction();
-                    try{
-                        Repeat:
-                        $random = Str::random(rand(6, 150));
-                        $cek = ShortLink::where('link_to', '=', $random)->count();
+                    Repeat: $random = Str::random(rand(6, 150));
+                    $cek = ShortLink::where('link_to', '=', $random)->count();
 
-                        if($cek != 0) goto Repeat;
+                    if ($cek != 0) goto Repeat;
 
-                        $dataInsertShortLink = [
-                            'link_from' => 'https://drive.google.com/open?id=' . explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
-                            'link_to' => $random,
-                        ];
+                    $dataInsertShortLink = [
+                        'link_from' => 'https://drive.google.com/open?id=' . explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
+                        'link_to' => $random,
+                    ];
 
-                        $insertShortLink = ShortLink::create($dataInsertShortLink);
+                    $insertShortLink = ShortLink::create($dataInsertShortLink);
 
-                        Repeat2:
-                        $random2 = Str::random(rand(6, 150));
-                        $cek2 = ShortLink::where('link_to', '=', $random2)->count();
+                    Repeat2: $random2 = Str::random(rand(6, 150));
+                    $cek2 = ShortLink::where('link_to', '=', $random2)->count();
 
-                        if($cek != 0) goto Repeat2;
+                    if ($cek2 != 0) goto Repeat2;
 
-                        $dataInsertShortLink2 = [
-                            'link_from' => json_decode($result[0], true)[0]['sources'][$key]['file'],
-                            'link_to' => $random2,
-                        ];
+                    $dataInsertShortLink2 = [
+                        'link_from' => json_decode($result[0], true)[0]['sources'][$key]['file'],
+                        'link_to' => $random2,
+                    ];
 
-                        $insertShortLink2 = ShortLink::create($dataInsertShortLink2);
+                    $insertShortLink2 = ShortLink::create($dataInsertShortLink2);
 
-                        $file = [
-                            'quality' => json_decode($result[0], true)[0]['sources'][$key]['label'],
-                            'google_drive_id' => explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
-                            'google_drive_link' => $random,
-                            'link' => $random2
-                        ];
+                    $file = [
+                        'quality' => json_decode($result[0], true)[0]['sources'][$key]['label'],
+                        'google_drive_id' => explode('/*/', explode('?e=', json_decode($result[0], true)[0]['sources'][$key]['file'])[0])[1],
+                        'google_drive_link' => $random,
+                        'link' => $random2
+                    ];
 
-                        InsertFilmFileJob::dispatch($file, $this->film)->delay(now()->addSeconds($key));
-                        DB::commit();
-                    }catch(Exception $e){
-                        DB::rollback();
-                    }
+                    InsertFilmFileJob::dispatch($file, $this->film)->delay(now()->addSeconds($key));
                 }
             }
         }
