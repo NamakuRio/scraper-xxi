@@ -54,7 +54,7 @@ class GetFilmSubtitleJob implements ShouldQueue
         $to = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
         $resultInJson = base64_decode(strtr($result[0], $from, $to));
 
-        $cekArraySubtitle = count(json_decode($resultInJson)) - 1;
+        $cekArraySubtitle = count(json_decode($resultInJson)) -1;
 
         $subtitleAll = json_decode($resultInJson, true)[$cekArraySubtitle];
 

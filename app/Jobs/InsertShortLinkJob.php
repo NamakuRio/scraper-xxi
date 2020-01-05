@@ -2,28 +2,28 @@
 
 namespace App\Jobs;
 
+use App\Models\Film;
 use App\Models\ShortLink;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class InsertShortLinkJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    protected $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct()
     {
-        error_reporting(0);
-        $this->data = $data;
+        //
     }
 
     /**
@@ -33,6 +33,55 @@ class InsertShortLinkJob implements ShouldQueue
      */
     public function handle()
     {
-        $insertShortLink = ShortLink::create($this->data);
+        $records = Film::offset(0)->limit(3000)->get();
+
+        foreach ($records as $key => $record) {
+            DB::beginTransaction();
+            try {
+                echo $record->id . ' ';
+
+                $cekDuls = ShortLink::where('link_to', '=', $record->subtitle)->count();
+                if ($cekDuls != 0) {
+                    DB::rollback();
+                    echo " Udah ada";
+                    echo "<br><br>";
+                    continue;
+                }
+
+                Repeat: $random = Str::random(rand(6, 150));
+                $cek = ShortLink::where('link_to', '=', $random)->count();
+                if ($cek != 0) goto Repeat;
+
+                $dataInsertShortLink = [
+                    'link_from' => $record->subtitle,
+                    'link_to' => $random,
+                ];
+
+                $insertShortLink = ShortLink::create($dataInsertShortLink);
+
+                if (!$insertShortLink) {
+                    DB::rollback();
+                    echo 'Gagal menambahkan shortlink';
+                }
+
+                $dataUpdateFilm = [
+                    'subtitle' => $random,
+                ];
+
+                $updateFilm = $record->update($dataUpdateFilm);
+
+                if (!$updateFilm) {
+                    DB::rollback();
+                    echo 'Gagal update shortlink film';
+                }
+
+                DB::commit();
+                echo 'Berhasil menyimpan data';
+            } catch (Exception $e) {
+                DB::rollback();
+                echo $e->getMessage() . '';
+            }
+            echo "<br><br>";
+        }
     }
 }

@@ -17,7 +17,7 @@ class ScraperController extends Controller
 
         $loop = true;
         $from = 1;
-        $to = 134;
+        $to = 1;
 
         GetHtmlListOfPageJob::dispatch($url, $delimiter1, $delimiter2, $delimiter3, $loop, $from, $to);
     }

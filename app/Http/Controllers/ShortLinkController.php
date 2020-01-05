@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\InsertShortLinkJob;
+use App\Models\Film;
+use App\Models\FilmFile;
+use App\Models\FilmSubtitle;
 use App\Models\ShortLink;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 
 class ShortLinkController extends Controller
@@ -20,7 +25,7 @@ class ShortLinkController extends Controller
     {
 
         DB::beginTransaction();
-        try{
+        try {
             $visitor = $shortLink->visitor + 1;
 
             $data = [
@@ -29,7 +34,7 @@ class ShortLinkController extends Controller
 
             $updateVisitor = $shortLink->update($data);
 
-            if(!$updateVisitor){
+            if (!$updateVisitor) {
                 DB::rollback();
                 return view('errors.404');
             }
@@ -50,16 +55,21 @@ class ShortLinkController extends Controller
 
             $addDetail = $shortLink->shortLinkDetails()->create($dataDetail);
 
-            if(!$addDetail){
+            if (!$addDetail) {
                 DB::rollback();
                 return view('errors.404');
             }
 
             DB::commit();
             return Redirect::to($shortLink->link_from);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
             dd($e->getMessage());
         }
+    }
+
+    public function setShort()
+    {
+        InsertShortLinkJob::dispatch();
     }
 }

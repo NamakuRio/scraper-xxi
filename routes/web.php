@@ -12,7 +12,6 @@ Route::group(['prefix' => 'film'], function () {
 
 Route::group(['prefix' => 'shortlink'], function() {
     Route::get('/', 'ShortLinkController@index')->name('shortlink.index');
+    Route::get('/films', 'ShortLinkController@setShort');
     Route::get('/{short_link}', 'ShortLinkController@to')->name('shortlink.to');
 });
-
-Route::get('scraper', 'ScraperController@index');
