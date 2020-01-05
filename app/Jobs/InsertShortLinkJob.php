@@ -35,7 +35,7 @@ class InsertShortLinkJob implements ShouldQueue
      */
     public function handle()
     {
-        $records = FilmSubtitle::offset(0)->limit(50000)->get();
+        $records = FilmSubtitle::offset(24218)->limit(50000)->get();
 
         foreach ($records as $key => $record) {
             DB::beginTransaction();
