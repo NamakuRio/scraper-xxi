@@ -6,14 +6,14 @@
         <div class="navbar-container content">
             <div class="navbar-collapse" id="navbar-mobile">
                 <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
-                    {{-- <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav">
                         <li class="nav-item mobile-menu d-xl-none mr-auto">
                             <a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#">
                                 <i class="ficon feather icon-menu"></i>
                             </a>
                         </li>
                     </ul>
-                    <ul class="nav navbar-nav bookmark-icons">
+                    {{-- <ul class="nav navbar-nav bookmark-icons">
                         <!-- li.nav-item.mobile-menu.d-xl-none.mr-auto-->
                         <!--   a.nav-link.nav-menu-main.menu-toggle.hidden-xs(href='#')-->
                         <!--     i.ficon.feather.icon-menu-->
